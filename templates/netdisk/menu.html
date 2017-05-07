@@ -1,0 +1,53 @@
+{% load static %}
+
+<aside class="pmd-sidebar sidebar-default pmd-sidebar-slide-push pmd-sidebar-left pmd-sidebar-open bg-fill-darkblue sidebar-with-icons"
+       role="navigation">
+    <ul class="nav pmd-sidebar-nav">
+        <!-- User info -->
+        <li class="dropdown pmd-dropdown pmd-user-info visible-xs visible-md visible-sm visible-lg">
+            <a aria-expanded="false" data-toggle="dropdown" class="btn-user dropdown-toggle media" data-sidebar="true"
+               aria-expandedhref="javascript:void(0);">
+                <div class="media-left">
+                    <img src="{% static "themes/images/user-icon.png" %}">
+                </div>
+                <div class="media-body media-middle">{{ request.session.user.username }}</div>
+                <div class="media-right media-middle"><i class="dic-more-vert dic"></i></div>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="/logout">注销</a></li>
+            </ul>
+        </li>
+
+        <li>
+            <a class="pmd-ripple-effect" href="/?show_type=all">
+                <i class="media-left media-middle material-icons md-light pmd-md">folder_open</i>
+                <span class="media-body">所有文件</span>
+            </a>
+        </li>
+        <li>
+            <a class="pmd-ripple-effect" href="/?show_type=photo">
+                <i class="media-left media-middle material-icons md-light pmd-md">collections</i>
+                <span class="media-body">图片</span>
+            </a>
+        </li>
+        <li>
+            <a class="pmd-ripple-effect" href="/?show_type=movie">
+                <i class="media-left media-middle material-icons md-light pmd-md">movie</i>
+                <span class="media-body">视频</span>
+            </a>
+        </li>
+        <li>
+            <a class="pmd-ripple-effect" href="/?show_type=doc">
+                <i class="media-left media-middle material-icons md-light pmd-md">library_books</i>
+                <span class="media-body">文档</span>
+            </a>
+        </li>
+        <li>
+            <a class="pmd-ripple-effect" href="/?show_type=music">
+                <i class="media-left media-middle material-icons md-light pmd-md">music_note</i>
+                <span class="media-body">音乐</span>
+            </a>
+        </li>
+
+    </ul>
+</aside>

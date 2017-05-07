@@ -1,0 +1,40 @@
+{% load static %}
+
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+    <title>首页</title>
+    {% include 'netdisk/css.html' %}
+</head>
+<body>
+{% include 'netdisk/header.html' %}
+<div class="pmd-sidebar-overlay"></div>
+{% include 'netdisk/menu.html' %}
+
+<div id="content" class="pmd-content inner-page">
+    <div class="container-fluid full-width-container blank">
+        <h1 class="section-title" id="services">
+            <span>Blank</span>
+        </h1>
+
+        <ol class="breadcrumb text-left">
+            <li><a href="index.html">Dashboard</a></li>
+            <li class="active">Blank</li>
+        </ol>
+
+        <div class="no-table-blank-state row">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+            </div>
+        </div>
+    </div>
+
+</div>
+{% include 'netdisk/footer.html' %}
+
+{% include 'netdisk/script.html' %}
+</body>
+</html>

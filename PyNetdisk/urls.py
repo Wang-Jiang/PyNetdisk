@@ -24,6 +24,7 @@ from netdisk import views as netdisk_views
 urlpatterns = [
     url(r'^$', netdisk_views.index, name='netdisk_index'),
     url(r'^login', netdisk_views.login, name='netdisk_login'),
+    url(r'^logout', netdisk_views.logout, name='netdisk_logout'),
     url(r'^register', netdisk_views.register, name='netdisk_register'),
     url(r'^admin/', admin.site.urls),
     url(r'^static/(?P<path>.*)$', views.serve),

@@ -1,4 +1,4 @@
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from netdisk.forms import RegisterForm
@@ -6,14 +6,37 @@ from netdisk.models import User
 
 
 def index(request):
-    return HttpResponse('测试')
+    show_type = request.GET.get('show_type', 'all')  # 显示的文件类型
+    print(show_type)
+    return render(request, 'netdisk/index.html')
 
 
 def login(request):
     if request.method == 'GET':
         return render(request, 'netdisk/login.html')
     elif request.method == 'POST':
-        pass
+        email = request.POST['email']
+        password = request.POST['password']
+        user = None
+        try:
+            user = User.objects.get(email=email, password=password)
+        except Exception:
+            print('邮件或者密码错误')
+
+        if user is None:
+            return HttpResponse('邮件或者密码错误')
+        # 登陆成功
+        request.session['user'] = user
+        print("登陆完成")
+        return HttpResponseRedirect('/')
+
+
+def logout(request):
+    try:
+        del request.session['user']  # 不存在时报错
+    except Exception:
+        print('没有登陆')
+    return HttpResponseRedirect('/')
 
 
 def register(request):
@@ -33,6 +56,3 @@ def register(request):
 
             User.objects.create(username=username, email=email, password=password)
             return HttpResponse(email + '注册成功')
-
-
-

@@ -48,6 +48,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'netdisk.middleware.LoginMiddleware',
 ]
 
 ROOT_URLCONF = 'PyNetdisk.urls'
@@ -135,3 +136,6 @@ STATICFILES_FINDERS = (
     "django.contrib.staticfiles.finders.FileSystemFinder",
     "django.contrib.staticfiles.finders.AppDirectoriesFinder"
 )
+
+# 解决JSON序列化问题
+SESSION_SERIALIZER = 'django.contrib.sessions.serializers.PickleSerializer'
