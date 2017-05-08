@@ -14,16 +14,21 @@ def index(request):
     print(show_type)
 
     user = request.session['user']
-    file_list = File.objects.get(user_id=user.id, parent_id=parent_id)
+    file_list = File.objects.filter(user_id=user.id, parent_id=parent_id)
+
     print(file_list)
-    return render(request, 'netdisk/index.html', {'show_type': show_type, 'parent_id': parent_id, 'file_list': file_list})
+    return render(request, 'netdisk/index.html',
+                  {'show_type': show_type, 'parent_id': parent_id, 'file_list': file_list})
 
 
 def create_folder(request):
     user = request.session['user']
     folder_name = request.POST['folder_name']
     parent_id = request.POST.get('paren_id', 0)  # id为0表示是根目录
-    folder = File.objects.create(parent_id=parent_id, user_id=user.id, file_type=0, name=folder_name,
+    folder = File.objects.create(parent_id=parent_id,
+                                 user_id=user.id,
+                                 file_type=0,
+                                 name=folder_name,
                                  create_time=datetime.now())
     return HttpResponseRedirect('/')
 
