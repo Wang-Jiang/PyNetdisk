@@ -23,6 +23,7 @@ from netdisk import views as netdisk_views
 
 urlpatterns = [
     url(r'^$', netdisk_views.index, name='netdisk_index'),
+    url(r'^create_folder', netdisk_views.create_folder, name='netdisk_create_folder'),
     url(r'^login', netdisk_views.login, name='netdisk_login'),
     url(r'^logout', netdisk_views.logout, name='netdisk_logout'),
     url(r'^register', netdisk_views.register, name='netdisk_register'),

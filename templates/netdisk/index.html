@@ -7,21 +7,55 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
     <title>首页</title>
-    {% include 'netdisk/css.html' %}
+    {% include 'netdisk/common/css.html' %}
 </head>
 <body>
-{% include 'netdisk/header.html' %}
+{% include 'netdisk/common/header.html' %}
 <div class="pmd-sidebar-overlay"></div>
-{% include 'netdisk/menu.html' %}
+{% include 'netdisk/common/menu.html' %}
 
 <div id="content" class="pmd-content inner-page">
     <div class="container-fluid full-width-container blank">
-        <h1 class="section-title" id="services">
-            <span>Blank</span>
-        </h1>
+        <div style="margin-top: 20px;margin-bottom: 14px;">
+            <button data-target="#create-folder-dialog" data-toggle="modal" type="button"
+                    class="btn pmd-btn-raised pmd-ripple-effect btn-default">新建文件夹
+            </button>
+            <button type="button" class="btn pmd-btn-raised pmd-ripple-effect btn-primary">上传文件</button>
+
+            <!--新建文件夹-->
+            <div tabindex="-1" class="modal fade" id="create-folder-dialog" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form class="form-horizontal" action="/create_folder" method="post">
+                         {% csrf_token %}
+                        <input type="hidden" value="0" name="paren_id">
+                        <div class="modal-content">
+                            <div class="modal-header bordered">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h2 class="pmd-card-title-text">新建文件夹</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                    <label for="first-name">名称</label>
+                                    <input type="text" class="mat-input form-control" name="folder_name">
+                                    <span class="help-text">输入文件夹的名称!</span>
+                                </div>
+                            </div>
+                            <div class="pmd-modal-action">
+                                <input class="btn pmd-ripple-effect btn-primary" type="submit" value="保存"/>
+                                <button data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button">
+                                    取消
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--新建文件夹-->
+
+        </div>
 
         <ol class="breadcrumb text-left">
-            <li><a href="index.html">Dashboard</a></li>
+            <li><a href="/">根目录</a></li>
             <li class="active">Blank</li>
         </ol>
 
@@ -33,8 +67,8 @@
     </div>
 
 </div>
-{% include 'netdisk/footer.html' %}
+{% include 'netdisk/common/footer.html' %}
 
-{% include 'netdisk/script.html' %}
+{% include 'netdisk/common/script.html' %}
 </body>
 </html>

@@ -1,14 +1,31 @@
+from datetime import datetime
+
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 
 from netdisk.forms import RegisterForm
-from netdisk.models import User
+from netdisk.models import User, File
 
 
+# 暂时未考虑显示类型
 def index(request):
     show_type = request.GET.get('show_type', 'all')  # 显示的文件类型
+    parent_id = request.GET.get('parent_id', 0)  # 父文件夹id
     print(show_type)
-    return render(request, 'netdisk/index.html')
+
+    user = request.session['user']
+    file_list = File.objects.get(user_id=user.id, parent_id=parent_id)
+    print(file_list)
+    return render(request, 'netdisk/index.html', {'show_type': show_type, 'parent_id': parent_id, 'file_list': file_list})
+
+
+def create_folder(request):
+    user = request.session['user']
+    folder_name = request.POST['folder_name']
+    parent_id = request.POST.get('paren_id', 0)  # id为0表示是根目录
+    folder = File.objects.create(parent_id=parent_id, user_id=user.id, file_type=0, name=folder_name,
+                                 create_time=datetime.now())
+    return HttpResponseRedirect('/')
 
 
 def login(request):

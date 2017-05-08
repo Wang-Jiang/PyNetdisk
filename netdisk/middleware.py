@@ -8,7 +8,7 @@ class LoginMiddleware(object):
     def __call__(self, request):
         # 调用 view 之前的代码
         url = request.path
-        print(url)
+        print('中间件拦截:' + url)
         if not url.startswith('/login'):
             try:
                 user = request.session['user']
