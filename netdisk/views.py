@@ -1,4 +1,5 @@
 from datetime import datetime
+from itertools import chain
 
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
@@ -14,6 +15,13 @@ def index(request):
     print(show_type)
 
     user = request.session['user']
+    # 检查父文件夹是否存在
+    try:
+        parent_file = File.objects.get(id=parent_id, user_id=user.id)
+    except Exception as error:
+        # TODO 404情况
+        print(error)
+
     file_list = File.objects.filter(user_id=user.id, parent_id=parent_id)
 
     print(file_list)
@@ -30,7 +38,50 @@ def create_folder(request):
                                  file_type=0,
                                  name=folder_name,
                                  create_time=datetime.now())
-    return HttpResponseRedirect('/')
+    return HttpResponseRedirect('/?parent_id=' + parent_id)
+
+
+def edit_name(request):
+    # 判断文件所有情况
+    file_id = request.POST['id']
+    file_name = request.POST['name']
+    user = request.session['user']
+    try:
+        file = File.objects.get(id=file_id, user_id=user.id)
+        file.name = file_name
+        file.save()
+        return HttpResponse('success')
+    except Exception:
+        return HttpResponse('error')
+
+
+def delete_file(request):
+    file_id = request.POST['id']
+    user = request.session['user']
+    try:
+        file = File.objects.get(id=file_id, user_id=user.id)
+        file_list = File.objects.filter(parent_id=file.id)
+        # 需要删除改目录下所有文件
+        for item in file_list:
+            # 将item的下一级子目录加入
+            chain(file_list, File.objects.filter(parent_id=item.id))
+
+        print(file_list)
+
+        file.delete()  # 删除文件记录
+        # 删除file_list的所有数据，即将file的子目录全部删除
+        for item in file_list:
+            item.delete()
+
+        return HttpResponse('success')
+    except Exception as error:
+        print('error:', error)
+        return HttpResponse('error')
+
+
+def upload_file(request):
+
+    pass
 
 
 def login(request):

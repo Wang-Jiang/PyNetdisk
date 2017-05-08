@@ -7,6 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
     <title>首页</title>
+    <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
     {% include 'netdisk/common/css.html' %}
 </head>
 <body>
@@ -27,7 +28,7 @@
                 <div class="modal-dialog">
                     <form class="form-horizontal" action="/create_folder" method="post">
                         {% csrf_token %}
-                        <input type="hidden" value="0" name="paren_id">
+                        <input type="hidden" value="{{ parent_id }}" name="paren_id">
                         <div class="modal-content">
                             <div class="modal-header bordered">
                                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
@@ -59,35 +60,75 @@
             <li class="active">Blank</li>
         </ol>
 
-        <div class="no-table-blank-state row">
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                <div class="component-box">
+        <div class="table-responsive pmd-card pmd-z-depth">
+            <table class="table table-mc-red pmd-table">
+                <thead>
+                <tr>
+                    <th width="50%">名称</th>
+                    <th>类型</th>
+                    <th>修改时间</th>
+                    <th>操作</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for item in file_list %}
+                    <tr>
+                        <td><a href="/?parent_id={{ item.id }}">{{ item.name }}</a></td>
+                        <td><span class="status-btn blue-bg">{{ item.file_type }}</span></td>
+                        <td>{{ item.create_time | date:"Y-m-d H:i:s" }}</td>
+                        <td class="pmd-table-row-action">
+                            <a href="javascript:void(0)" onclick="editFile( {{ item.id }}, '{{ item.name }}', this);"
+                               class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-default btn-sm">
+                                <i class="material-icons md-dark pmd-sm">edit</i>
+                            </a>
+                            <a href="javascript:void(0)" onclick="deleteFile( {{ item.id }}, '{{ item.name }}', this);"
+                               class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-default btn-sm">
+                                <i class="material-icons md-dark pmd-sm">delete</i>
+                            </a>
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <ul class="list-group pmd-z-depth pmd-list pmd-card-list">
-                                {% for item in file_list %}
-                                    <li class="list-group-item">
-                                        <a href="#" class="list-group-item">
-                                            <i class="material-icons media-left pmd-md">mood</i>
-                                            <div class="media-body">
-                                                <h5>{{ item.name }}</h5>
-                                            </div>
-                                        </a>
-                                    </li>
-                                {% endfor %}
-                            </ul>
-                        </div>
-                    </div>
-
-                </div>
-            </div>
         </div>
     </div>
 
 </div>
 {% include 'netdisk/common/footer.html' %}
-
 {% include 'netdisk/common/script.html' %}
+
+<script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.js"></script>
+<script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script>
+    layui.use(['layer'], function () {
+    });
+
+    //修改文件名
+    function editFile(id, oldName, dom) {
+        layer.prompt({title: '修改文件名', value: oldName, formType: 0}, function (name, index) {
+            $.post('/edit_name', {id: id, name: name, csrfmiddlewaretoken: '{{ csrf_token }}'}, function (data) {
+                layer.msg(data);
+                layer.close(index);
+                location.reload();
+            });
+        });
+    }
+
+    function deleteFile(id, oldName, dom) {
+        layer.confirm('确认删除文件', {
+            btn: ['确认', '取消']
+        }, function (index) {
+            $.post('/delete_file', {id: id, name: name, csrfmiddlewaretoken: '{{ csrf_token }}'}, function (data) {
+                $(dom).parents('tr').remove();
+                layer.msg(data);
+                layer.close(index);
+            });
+        }, function (index) {
+            layer.close(index);
+        });
+    }
+
+</script>
 </body>
 </html>
