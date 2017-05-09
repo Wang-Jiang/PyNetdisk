@@ -26,6 +26,7 @@ urlpatterns = [
     url(r'^create_folder', netdisk_views.create_folder, name='netdisk_create_folder'),
     url(r'^edit_name', netdisk_views.edit_name, name='netdisk_edit_name'),
     url(r'^delete_file', netdisk_views.delete_file, name='netdisk_delete_file'),
+    url(r'^upload_file', netdisk_views.upload_file, name='netdisk_upload_file'),
     url(r'^login', netdisk_views.login, name='netdisk_login'),
     url(r'^logout', netdisk_views.logout, name='netdisk_logout'),
     url(r'^register', netdisk_views.register, name='netdisk_register'),

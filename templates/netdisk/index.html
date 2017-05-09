@@ -21,14 +21,14 @@
             <button data-target="#create-folder-dialog" data-toggle="modal" type="button"
                     class="btn pmd-btn-raised pmd-ripple-effect btn-default">新建文件夹
             </button>
-            <button type="button" class="btn pmd-btn-raised pmd-ripple-effect btn-primary">上传文件</button>
+            <button data-target="#upload-file-dialog" data-toggle="modal" type="button" class="btn pmd-btn-raised pmd-ripple-effect btn-primary">上传文件</button>
 
             <!--新建文件夹-->
             <div tabindex="-1" class="modal fade" id="create-folder-dialog" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
                     <form class="form-horizontal" action="/create_folder" method="post">
                         {% csrf_token %}
-                        <input type="hidden" value="{{ parent_id }}" name="paren_id">
+                        <input type="hidden" value="{{ parent_id }}" name="parent_id">
                         <div class="modal-content">
                             <div class="modal-header bordered">
                                 <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
@@ -52,6 +52,36 @@
                 </div>
             </div>
             <!--新建文件夹-->
+
+            <!--上传文件-->
+            <div tabindex="-1" class="modal fade" id="upload-file-dialog" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog">
+                    <form class="form-horizontal" action="/upload_file" method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ parent_id }}" name="parent_id">
+                        <div class="modal-content">
+                            <div class="modal-header bordered">
+                                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">×</button>
+                                <h2 class="pmd-card-title-text">上传文件</h2>
+                            </div>
+                            <div class="modal-body">
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                    <label for="first-name">上传文件</label>
+                                    <input type="file" class="mat-input form-control" name="file">
+                                    <span class="help-text">选择需要上传的文件!</span>
+                                </div>
+                            </div>
+                            <div class="pmd-modal-action">
+                                <input class="btn pmd-ripple-effect btn-primary" type="submit" value="上传"/>
+                                <button data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button">
+                                    取消
+                                </button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <!--上传文件-->
 
         </div>
 

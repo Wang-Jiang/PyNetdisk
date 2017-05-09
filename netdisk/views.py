@@ -1,3 +1,5 @@
+import os
+import random
 from datetime import datetime
 from itertools import chain
 
@@ -32,7 +34,7 @@ def index(request):
 def create_folder(request):
     user = request.session['user']
     folder_name = request.POST['folder_name']
-    parent_id = request.POST.get('paren_id', 0)  # id为0表示是根目录
+    parent_id = request.POST.get('parent_id', 0)  # id为0表示是根目录
     folder = File.objects.create(parent_id=parent_id,
                                  user_id=user.id,
                                  file_type=0,
@@ -79,9 +81,23 @@ def delete_file(request):
         return HttpResponse('error')
 
 
+# 支持多文件上传
 def upload_file(request):
+    user = request.session['user']
+    files = request.FILES.getlist("file")
+    parent_id = request.POST['parent_id']
+    for f in files:
+        # 获取后缀名，没有考虑，上传的文件没有后缀的情况
+        ext_name = os.path.splitext(f.name)[-1]
+        print("ext_name", ext_name)
 
-    pass
+        # 生成时间戳+随机数字，用于重命名文件，防止文件重名
+        target_file_name = datetime.now().strftime('%Y%b%d%H%M%S') + str(random.randint(1000, 9999)) + ext_name
+        target_file = open('D:/workspace/PyNetdisk/netdisk/upload/' + target_file_name, 'wb+')
+        for chunk in f.chunks():
+            target_file.write(chunk)
+            target_file.close()
+    return HttpResponseRedirect('/?parent_id=' + parent_id)
 
 
 def login(request):
@@ -133,5 +149,3 @@ def register(request):
 
 def help_page(request):
     return render(request, 'netdisk/help.html')
-
-
