@@ -29,6 +29,7 @@ urlpatterns = [
     url(r'^login', netdisk_views.login, name='netdisk_login'),
     url(r'^logout', netdisk_views.logout, name='netdisk_logout'),
     url(r'^register', netdisk_views.register, name='netdisk_register'),
+    url(r'^help', netdisk_views.help_page, name='netdisk_help'),
     url(r'^admin/', admin.site.urls),
     url(r'^static/(?P<path>.*)$', views.serve),
 ]

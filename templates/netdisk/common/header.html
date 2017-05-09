@@ -4,33 +4,18 @@
     <div class="container-fluid">
         <div class="pmd-navbar-right-icon pull-right navigation">
             <!-- Notifications -->
-            <div class="dropdown notification icons pmd-dropdown">
-                <a href="javascript:void(0)" title="Notification" class="dropdown-toggle pmd-ripple-effect"
+            <div class="dropdown icons pmd-dropdown" style="margin-top: 18px;">
+                <a href="javascript:void(0)" class="dropdown-toggle pmd-ripple-effect"
                    data-toggle="dropdown" role="button" aria-expanded="true">
-                    <div data-badge="3" class="material-icons md-light pmd-sm pmd-badge  pmd-badge-overlap">
-                        notifications_none
+                    <div class="material-icons md-light pmd-sm pmd-badge  pmd-badge-overlap">
+                        help_outline
                     </div>
                 </a>
 
                 <div class="dropdown-menu dropdown-menu-right pmd-card pmd-card-default pmd-z-depth" role="menu">
-                    <!-- Card header -->
-                    <div class="pmd-card-title">
-                        <div class="media-body media-middle">
-                            <a href="notifications.html" class="pull-right">3 new notifications</a>
-                            <h3 class="pmd-card-title-text">Notifications</h3>
-                        </div>
-                    </div>
-
-                    <!-- Notifications list -->
-                    <ul class="list-group pmd-list-avatar pmd-card-list">
-                        <li class="list-group-item hidden">
-                            <p class="notification-blank">
-                                <span class="dic dic-notifications-none"></span>
-                                <span>You don´t have any notifications</span>
-                            </p>
-                        </li>
+                    <ul class="list-group pmd-list-avatar pmd-card-list" style="min-width: 240px;">
                         <li class="list-group-item unread">
-                            <a href="javascript:void(0)">
+                            <a href="/help">
                                 <div class="media-left">
 									<span class="avatar-list-img40x40">
 										<img alt="40x40" data-src="holder.js/40x40" class="img-responsive"
@@ -38,13 +23,12 @@
 									</span>
                                 </div>
                                 <div class="media-body">
-                                    <span class="list-group-item-heading"><span>Prathit</span> posted a new challanegs</span>
-                                    <span class="list-group-item-text">5 Minutes ago</span>
+                                    <h5>帮助</h5>
                                 </div>
                             </a>
                         </li>
                         <li class="list-group-item">
-                            <a href="javascript:void(0)">
+                            <a type="button" href="javascript:void(0)" data-target="#about-dialog" data-toggle="modal">
                                 <div class="media-left">
 									<span class="avatar-list-img40x40">
 										<img alt="40x40" data-src="holder.js/40x40" class="img-responsive"
@@ -52,13 +36,13 @@
 									</span>
                                 </div>
                                 <div class="media-body">
-                                    <span class="list-group-item-heading"><span>Keel</span> Cloned 2 challenges.</span>
-                                    <span class="list-group-item-text">15 Minutes ago</span>
+                                    <h5>关于</h5>
                                 </div>
                             </a>
                         </li>
-                    </ul><!-- End notifications list -->
+                    </ul>
                 </div>
+
 
             </div> <!-- End notifications -->
         </div>
@@ -73,3 +57,42 @@
     </div>
 
 </nav>
+
+<!--关于对话框-->
+<div tabindex="-1" class="modal fade" id="about-dialog" style="display: none;"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button aria-hidden="true" data-dismiss="modal" class="close" type="button">
+                    ×
+                </button>
+                <div class="media-left">
+                    <a href="javascript:void(0);" class="avatar-list-img">
+                        <img width="40" height="40"
+                             src="http://propeller.in/components/list/img/40x40.png">
+                    </a>
+                </div>
+                <div class="media-body media-middle">
+                    <h3 class="pmd-card-title-text">关于</h3>
+                    <span class="pmd-card-subtitle-text">关于PyNetdisk</span>
+                </div>
+            </div>
+            <div class="pmd-modal-media">
+                <img width="1184" height="666" class="img-responsive"
+                     src="http://propeller.in/assets/images/profile-pic.png">
+            </div>
+            <div class="modal-body">
+                PyNetdisk是一个采用Django开发的小型多人网盘系统，项目采用MIT协议开源，你可以在点击下面的
+                <i class="material-icons pmd-sm">code</i>了解更多细节
+            </div>
+            <div class="pmd-modal-action">
+                <a type="button" href="https://github.com/Wang-Jiang/PyNetdisk" target="_blank"
+                        class="btn btn-sm pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-primary">
+                    <i class="material-icons pmd-sm">code</i>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+<!--关于对话框-->

@@ -129,3 +129,9 @@ def register(request):
 
             User.objects.create(username=username, email=email, password=password)
             return HttpResponse(email + '注册成功')
+
+
+def help_page(request):
+    return render(request, 'netdisk/help.html')
+
+
