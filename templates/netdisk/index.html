@@ -21,7 +21,9 @@
             <button data-target="#create-folder-dialog" data-toggle="modal" type="button"
                     class="btn pmd-btn-raised pmd-ripple-effect btn-default">新建文件夹
             </button>
-            <button data-target="#upload-file-dialog" data-toggle="modal" type="button" class="btn pmd-btn-raised pmd-ripple-effect btn-primary">上传文件</button>
+            <button data-target="#upload-file-dialog" data-toggle="modal" type="button"
+                    class="btn pmd-btn-raised pmd-ripple-effect btn-primary">上传文件
+            </button>
 
             <!--新建文件夹-->
             <div tabindex="-1" class="modal fade" id="create-folder-dialog" style="display: none;" aria-hidden="true">
@@ -103,10 +105,30 @@
                 <tbody>
                 {% for item in file_list %}
                     <tr>
-                        <td><a href="/?parent_id={{ item.id }}">{{ item.name }}</a></td>
+                        <td>
+                            {% if item.file_type == 0 %}
+                                <a href="/?parent_id={{ item.id }}"><i class="material-icons media-left pmd-sm" style="padding-right:10px;">folder_open</i><span class="media-body">{{ item.name }}</span></a>
+                            {% elif item.file_type == 1 %}
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">insert_drive_file</i><span class="media-body">{{ item.name }}</span>
+                            {% elif item.file_type == 2 %}
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">collections</i><span class="media-body">{{ item.name }}</span>
+                            {% elif item.file_type == 3 %}
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">movie</i><span class="media-body">{{ item.name }}</span>
+                            {% elif item.file_type == 4 %}
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">library_books</i><span class="media-body">{{ item.name }}</span>
+                            {% elif item.file_type == 5 %}
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">music</i><span class="media-body">{{ item.name }}</span>
+                            {% endif %}
+                        </td>
                         <td><span class="status-btn blue-bg">{{ item.file_type }}</span></td>
                         <td>{{ item.create_time | date:"Y-m-d H:i:s" }}</td>
-                        <td class="pmd-table-row-action">
+                        <td class="pmd-table-row-action" style="text-align: right">
+                            {% if item.file_type > 0 %}
+                                <a href="/download_file?file_id={{ item.id }}" target="_blank"
+                                   class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-default btn-sm">
+                                    <i class="material-icons md-dark pmd-sm">file_download</i>
+                                </a>
+                            {% endif %}
                             <a href="javascript:void(0)" onclick="editFile( {{ item.id }}, '{{ item.name }}', this);"
                                class="btn pmd-btn-fab pmd-btn-flat pmd-ripple-effect btn-default btn-sm">
                                 <i class="material-icons md-dark pmd-sm">edit</i>
