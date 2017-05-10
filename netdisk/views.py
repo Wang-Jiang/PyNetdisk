@@ -11,6 +11,9 @@ from netdisk.models import User, File
 
 
 # 暂时未考虑显示类型
+from netdisk.utils import get_file_type
+
+
 def index(request):
     show_type = request.GET.get('show_type', 'all')  # 显示的文件类型
     parent_id = request.GET.get('parent_id', 0)  # 父文件夹id
@@ -97,6 +100,9 @@ def upload_file(request):
         for chunk in f.chunks():
             target_file.write(chunk)
             target_file.close()
+
+        # 需要工根据相应的后缀，给file_type赋值
+        file = File.objects.create(parent_id=parent_id, user_id=user.id, file_type=get_file_type(ext_name), name=f.name, file_path=target_file.name)
     return HttpResponseRedirect('/?parent_id=' + parent_id)
 
 
