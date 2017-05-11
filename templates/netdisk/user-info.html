@@ -1,0 +1,148 @@
+{% load static %}
+
+<!doctype html>
+<html lang="">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
+    <title>信息</title>
+    {% include 'netdisk/common/css.html' %}
+</head>
+<body>
+{% include 'netdisk/common/header.html' %}
+<div class="pmd-sidebar-overlay"></div>
+{% include 'netdisk/common/menu.html' %}
+
+<div id="content" class="pmd-content inner-page">
+    <div class="container-fluid full-width-container blank">
+        <div style="margin-top: 20px;margin-bottom: 14px;">
+        </div>
+
+        <ol class="breadcrumb text-left">
+            <li><a href="/">根目录</a></li>
+            <li class="active">信息</li>
+        </ol>
+
+        <div class="section section-custom" id="user_info">
+            <div class="section-inner pmd-card pmd-z-depth col-md-6 col-md-offset-4">
+                <div class="pmd-card card-default pmd-z-depth">
+                    <div class="login-card">
+                        <form action="/user_info" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ user.id }}" name="id">
+                            <div class="pmd-card-title card-header-border text-center">
+                                <div class="loginlogo">
+                                    <a href="javascript:void(0);"><img src="{% static "themes/images/logo-icon.png" %}"></a>
+                                </div>
+                                <h3>修改个人信息</h3>
+                            </div>
+                            <div class="pmd-card-body">
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                    <label class="control-label pmd-input-group-label">昵称</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">perm_identity</i>
+                                        </div>
+                                        <input class="form-control" type="text" value="{{ user.username }}" name="username"><span class="pmd-textfield-focused"></span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
+                                <div class="form-group clearfix">
+                                    <div class="checkbox pull-left">
+                                        <label class="pmd-checkbox checkbox-pmd-ripple-effect"></label>
+                                    </div>
+                                    <span class="pull-right forgot-password">
+									<a href="javascript:void(0);">修改密码</a>
+								</span>
+                                </div>
+                                <button  type="submit" class="btn pmd-ripple-effect btn-primary btn-block">保存</button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <div class="forgot-password-card">
+                        <form action="/change_password" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ user.id }}" name="id">
+                            <div class="pmd-card-title card-header-border text-center">
+                            </div>
+                            <div class="pmd-card-body">
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label" style="margin-bottom: 10px;">
+                                    <label class="control-label pmd-input-group-label">旧密码</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">lock_open</i></div>
+                                        <input class="form-control" type="text" name="old_password"><span class="pmd-textfield-focused"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label" style="margin-bottom: 10px;">
+                                    <label class="control-label pmd-input-group-label">新密码</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">lock_outline</i></div>
+                                        <input class="form-control" type="text" name="new_password"><span class="pmd-textfield-focused"></span>
+                                    </div>
+                                </div>
+
+                                <div class="form-group pmd-textfield pmd-textfield-floating-label">
+                                    <label class="control-label pmd-input-group-label">确认密码</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">lock_outline</i></div>
+                                        <input class="form-control" type="text" name="repeat_password"><span class="pmd-textfield-focused"></span>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
+                                <button type="submit" class="btn pmd-ripple-effect btn-primary btn-block">保存</button>
+                                <p class="redirection-link">
+                                    <a href="javascript:void(0);" class="register-login">修改信息</a>
+                                </p>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+{% include 'netdisk/common/footer.html' %}
+{% include 'netdisk/common/script.html' %}
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $('.app-list-icon li a').addClass("active");
+        $(".login-for").click(function () {
+            $('.login-card').hide();
+            $('.forgot-password-card').show();
+        });
+        $(".signin").click(function () {
+            $('.login-card').show();
+            $('.forgot-password-card').hide();
+        });
+    });
+</script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".login-register").click(function () {
+            $('.login-card').hide();
+            $('.forgot-password-card').hide();
+            $('.register-card').show();
+        });
+
+        $(".register-login").click(function () {
+            $('.register-card').hide();
+            $('.forgot-password-card').hide();
+            $('.login-card').show();
+        });
+        $(".forgot-password").click(function () {
+            $('.login-card').hide();
+            $('.register-card').hide();
+            $('.forgot-password-card').show();
+        });
+    });
+</script>
+</body>
+</html>

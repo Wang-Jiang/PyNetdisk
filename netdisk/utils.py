@@ -2,7 +2,7 @@
 def get_file_type(ext_name):
     photo_file = ['.jpg', '.png', '.gif', '.jpeg']
     movie_file = ['.mp4', '.mkv']
-    doc_file = ['.doc', '.ppt', '.xls', '.pdf']
+    doc_file = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx' , '.pdf', 'txt']
     music_file = ['.mp3']
 
     ext_name = ext_name.lower()
