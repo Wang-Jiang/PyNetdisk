@@ -22,11 +22,12 @@ def index(request):
 
     user = request.session['user']
     # 检查父文件夹是否存在
-    try:
-        parent_file = File.objects.get(id=parent_id, user_id=user.id)
-    except Exception as error:
-        # TODO 404情况
-        print(error)
+    if parent_id != 0:
+        try:
+            parent_file = File.objects.get(id=parent_id, user_id=user.id)
+        except Exception as error:
+            # TODO 404情况
+            print(error)
 
     # 查询并排序
     if show_type is 'all' or show_type is '':
@@ -65,7 +66,8 @@ def edit_name(request):
 
         file.save()
         return HttpResponse('success')
-    except Exception:
+    except Exception as error:
+        print(error)
         return HttpResponse('error')
 
 

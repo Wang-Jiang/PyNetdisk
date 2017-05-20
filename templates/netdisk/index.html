@@ -111,7 +111,7 @@
                             {% elif item.file_type == 1 %}
                                 <i class="material-icons media-left pmd-sm" style="padding-right:10px;">insert_drive_file</i><span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 2 %}
-                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">collections</i><span class="media-body">{{ item.name }}</span>
+                                <a href="/preview_file?file_id={{ item.id }}" target="_blank"> <i class="material-icons media-left pmd-sm" style="padding-right:10px;">collections</i><span class="media-body">{{ item.name }}</span></a>
                             {% elif item.file_type == 3 %}
                                 <i class="material-icons media-left pmd-sm" style="padding-right:10px;">movie</i><span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 4 %}

@@ -1,8 +1,11 @@
 # 传入文件的后缀，返回该文件的类型
+import hashlib
+
+
 def get_file_type(ext_name):
     photo_file = ['.jpg', '.png', '.gif', '.jpeg']
     movie_file = ['.mp4', '.mkv']
-    doc_file = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx' , '.pdf', 'txt']
+    doc_file = ['.doc', '.docx', '.ppt', '.pptx', '.xls', '.xlsx', '.pdf', 'txt']
     music_file = ['.mp3']
 
     ext_name = ext_name.lower()
@@ -32,3 +35,14 @@ def get_file_icon(file_type):
 def get_show_type_num(file_type):
     num_dic = {'all': 1, 'photo': 2, 'movie': 3, 'doc': 4, 'music': 5}
     return num_dic[file_type]
+
+
+# 获取文件的MD5
+def get_file_md5(file_path):
+    with open(file_path, 'rb') as f:
+        md5obj = hashlib.md5()
+        md5obj.update(f.read())
+        hash_code = md5obj.hexdigest()
+        print(hash_code)
+        return hash_code
+

@@ -18,3 +18,5 @@ class File(models.Model):
     name = models.CharField(max_length=64)
     create_time = models.DateTimeField(default=datetime.now)
     file_path = models.CharField(max_length=128)  # 当类型是文件的时候，这个字段才有用，它是存放文件的具体位置
+    file_md5 = models.CharField(max_length=32, default='')  # 文件的MD5
+    file_size = models.CharField(max_length=10, default='0B')  # 文件的大小，已经被格式化
