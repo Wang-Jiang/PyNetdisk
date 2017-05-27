@@ -1,6 +1,9 @@
 # 传入文件的后缀，返回该文件的类型
 import hashlib
 
+import io
+import os
+
 
 def get_file_type(ext_name):
     photo_file = ['.jpg', '.png', '.gif', '.jpeg']
@@ -45,4 +48,50 @@ def get_file_md5(file_path):
         hash_code = md5obj.hexdigest()
         print(hash_code)
         return hash_code
+
+
+# 获取文件的MD5
+def get_md5(path):
+    m = hashlib.md5()
+    file = io.FileIO(path, 'r')
+    block = file.read(1024)
+    while block != b'':
+        m.update(block)
+        block = file.read(1024)
+    file.close()
+
+    md5value = m.hexdigest()
+    # print(md5value + "  " + path)
+    return md5value
+
+
+# 字节bytes转化kb\m\g
+def format_size(bytes):
+    try:
+        bytes = float(bytes)
+        kb = bytes / 1024
+    except:
+        print("传入的字节格式不对")
+        return "Error"
+
+    if kb >= 1024:
+        M = kb / 1024
+        if M >= 1024:
+            G = M / 1024
+            return "%.2fG" % (G)
+        else:
+            return "%.2fM" % (M)
+    else:
+        return "%.2fkb" % (kb)
+
+
+# 获取文件大小
+def get_file_size(path):
+    try:
+        size = os.path.getsize(path)
+        return format_size(size)
+    except Exception as err:
+        print(err)
+
+
 

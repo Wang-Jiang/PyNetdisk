@@ -3,6 +3,7 @@ import random
 from datetime import datetime
 from itertools import chain
 
+import sys
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.http import urlquote
@@ -10,7 +11,7 @@ from django.utils.http import urlquote
 from netdisk.forms import RegisterForm
 from netdisk.message import Message
 from netdisk.models import User, File
-from netdisk.utils import get_file_type, get_show_type_num
+from netdisk.utils import get_file_type, get_show_type_num, get_md5, get_file_size
 
 
 def index(request):
@@ -118,16 +119,22 @@ def upload_file(request):
 
         # 生成时间戳+随机数字，用于重命名文件，防止文件重名
         target_file_name = datetime.now().strftime('%Y%b%d%H%M%S') + str(random.randint(1000, 9999)) + ext_name
-        target_file = open('D:/workspace/PyNetdisk/netdisk/upload/' + target_file_name, 'wb+')
+        target_file = open(sys.path[0] + '/netdisk/upload/' + target_file_name, 'wb+')
         for chunk in f.chunks():
             target_file.write(chunk)
             # 关闭文件
         target_file.close()
+        # MD5
+        file_md5 = get_md5(target_file.name)
 
         # 需要工根据相应的后缀，给file_type赋值
-        file = File.objects.create(parent_id=parent_id, user_id=user.id, file_type=get_file_type(ext_name), name=f.name,
-                                   file_path=target_file.name)
-    return HttpResponseRedirect('/?parent_id=' + parent_id)
+        # 先检查一下是否存在同名文件
+        file = File.objects.filter(parent_id=parent_id, user_id=user.id, name=f.name)
+        if file is None or file.count() == 0:
+            File.objects.create(parent_id=parent_id, user_id=user.id, file_type=get_file_type(ext_name), name=f.name,
+                                file_path=target_file.name, file_md5=file_md5, create_time=datetime.now(), file_size=get_file_size(target_file.name))
+        # 不允许同名文件
+    return HttpResponse(Message(100, u'上传成功').to_json(), content_type='application/json')
 
 
 def download_file(request):
@@ -251,7 +258,8 @@ def user_info(request):
 
             # 生成时间戳+随机数字，用于重命名文件，防止文件重名
             target_file_name = datetime.now().strftime('%Y%b%d%H%M%S') + str(random.randint(1000, 9999)) + ext_name
-            target_file = open('D:/workspace/PyNetdisk/netdisk/static/avatar/' + target_file_name, 'wb+')
+            # target_file = open('D:/workspace/PyNetdisk/netdisk/static/avatar/' + target_file_name, 'wb+')
+            target_file = open(sys.path[0] + '/netdisk/static/avatar/' + target_file_name, 'wb+')
             for chunk in upload_photo.chunks():
                 target_file.write(chunk)
                 # 关闭文件
@@ -294,7 +302,21 @@ def change_password(request):
 def check_file_md5(request):
     user = request.session['user']
     file_name = request.POST['name']
-    md5 = request.POST['md5']
+    parent_id = request.POST['parent_id']
+    file_md5 = request.POST['md5']
 
+    file = File.objects.filter(file_md5=file_md5)
+    if file is not None and file.count() > 0:
+        file = file[0]
+        # 检查用户当前目录是否存在重名文件
+        file_temp = File.objects.filter(parent_id=parent_id, user_id=user.id, name=file_name)
+        if file_temp is None or file_temp.count() == 0:
+            # 新建一条文件记录
+            File.objects.create(parent_id=parent_id, user_id=user.id, file_type=file.file_type, name=file_name,
+                                file_md5=file_md5, file_path=file.file_path, create_time=datetime.now(), file_size=file.file_size)
+        else:
+            return HttpResponse(Message(100, u'存在重名文件').to_json(), content_type='application/json')
 
-    pass
+        return HttpResponse(Message(100, u'文件秒传完成').to_json(), content_type='application/json')
+
+    return HttpResponse(Message(200, u'服务器不存在该文件').to_json(), content_type='application/json')

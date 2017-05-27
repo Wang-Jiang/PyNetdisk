@@ -58,7 +58,8 @@
             <!--上传文件-->
             <div tabindex="-1" class="modal fade" id="upload-file-dialog" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
-                    <form id="file_upload" class="form-horizontal" action="/upload_file" method="post" enctype="multipart/form-data">
+                    <form id="file_upload" class="form-horizontal" action="/upload_file" method="post"
+                          enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" value="{{ parent_id }}" name="parent_id">
                         <div class="modal-content">
@@ -74,7 +75,8 @@
                                 </div>
                             </div>
                             <div class="pmd-modal-action">
-                                <input class="btn pmd-ripple-effect btn-primary" type="button" value="上传" id="upload_button"/>
+                                <input class="btn pmd-ripple-effect btn-primary" type="button" value="上传"
+                                       id="upload_button"/>
                                 <button data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button">
                                     取消
                                 </button>
@@ -100,6 +102,7 @@
                 <tr>
                     <th width="50%">名称</th>
                     <th>类型</th>
+                    <th>大小</th>
                     <th>修改时间</th>
                     <th>操作</th>
                 </tr>
@@ -133,6 +136,7 @@
                             {% endif %}
                         </td>
                         <td><span class="status-btn blue-bg">{{ item.file_type }}</span></td>
+                        <td><span class="status-btn blue-bg">{{ item.file_size }}</span></td>
                         <td>{{ item.create_time | date:"Y-m-d H:i:s" }}</td>
                         <td class="pmd-table-row-action" style="text-align: right">
                             {% if item.file_type > 0 %}
@@ -205,18 +209,15 @@
     $(document).ready(function () {
         options = {
             success: function (data) {
-                layer.msg('上传成功');
+                layer.msg(data.msg);
+                location.reload()
             }
         };
-        // ajaxForm
         $("#file_upload").ajaxForm(options);
-        // ajaxSubmit
         $("#upload_button").click(function () {
             checkUpload();
         });
-
     });
-
 
     function checkUpload() {
         getFileMD5();
@@ -224,7 +225,7 @@
 
     function upload() {
         layer.msg('开始上传文件');
-        $("#upload_file").ajaxSubmit(options);
+        $("#file_upload").ajaxSubmit(options);
     }
 
     function getFileMD5() {
@@ -244,10 +245,7 @@
             if (uploadFile.size !== e.target.result.byteLength) {
                 alert('ERROR:Browser reported success but could not read the file until the end.');
             } else {
-//          	 alert('success'+ SparkMD5.ArrayBuffer.hash(e.target.result));
                 uploadFileMD5 = SparkMD5.ArrayBuffer.hash(e.target.result);
-                $("#text_md5").text("文件MD5：" + uploadFileMD5);
-
                 uploadFileName = uploadFile.name;
                 uploadFileSize = uploadFile.size;
                 checkFileMD5();
@@ -264,16 +262,17 @@
     //检查MD5是否存在记录，如果存在就需不要上传文件了
     function checkFileMD5() {
         $.post("/check_file_md5", {
+            "csrfmiddlewaretoken": '{{ csrf_token }}',
             "parent_id": parentId,
             "size": uploadFileSize,
             "md5": uploadFileMD5,
             "name": uploadFileName
         }, function (data) {
-            if (data.code === 0) {
-                alert("文件秒传完成");
+            if (data.code === 100) {
+                layer.msg(data.msg);
+                location.reload();
             } else {
-                //开始上传文件
-                alert("存在状况：" + data.code);
+                layer.msg("存在状况：" + data.msg);
                 upload();
             }
         });
