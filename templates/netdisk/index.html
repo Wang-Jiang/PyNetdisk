@@ -8,7 +8,7 @@
     <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
     <title>首页</title>
     <link rel="stylesheet" href="{% static 'layui/css/layui.css' %}">
-    {% include 'netdisk/common/css.html' %}
+    {% include 'netdisk/common/head.html' %}
 </head>
 <body>
 {% include 'netdisk/common/header.html' %}
@@ -58,7 +58,7 @@
             <!--上传文件-->
             <div tabindex="-1" class="modal fade" id="upload-file-dialog" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
-                    <form class="form-horizontal" action="/upload_file" method="post" enctype="multipart/form-data">
+                    <form id="file_upload" class="form-horizontal" action="/upload_file" method="post" enctype="multipart/form-data">
                         {% csrf_token %}
                         <input type="hidden" value="{{ parent_id }}" name="parent_id">
                         <div class="modal-content">
@@ -69,12 +69,12 @@
                             <div class="modal-body">
                                 <div class="form-group pmd-textfield pmd-textfield-floating-label">
                                     <label for="first-name">上传文件</label>
-                                    <input type="file" class="mat-input form-control" name="file">
+                                    <input type="file" class="mat-input form-control" name="file" id="file">
                                     <span class="help-text">选择需要上传的文件!</span>
                                 </div>
                             </div>
                             <div class="pmd-modal-action">
-                                <input class="btn pmd-ripple-effect btn-primary" type="submit" value="上传"/>
+                                <input class="btn pmd-ripple-effect btn-primary" type="button" value="上传" id="upload_button"/>
                                 <button data-dismiss="modal" class="btn pmd-ripple-effect btn-default" type="button">
                                     取消
                                 </button>
@@ -89,7 +89,9 @@
 
         <ol class="breadcrumb text-left">
             <li><a href="/">根目录</a></li>
-            <li class="active">Blank</li>
+            {% for file_path in file_path_list %}
+                <li class="active"><a href="/?parent_id={{ file_path.id }} ">{{ file_path.name }}</a></li>
+            {% endfor %}
         </ol>
 
         <div class="table-responsive pmd-card pmd-z-depth">
@@ -107,17 +109,27 @@
                     <tr>
                         <td>
                             {% if item.file_type == 0 %}
-                                <a href="/?parent_id={{ item.id }}"><i class="material-icons media-left pmd-sm" style="padding-right:10px;">folder_open</i><span class="media-body">{{ item.name }}</span></a>
+                                <a href="/?parent_id={{ item.id }}"><i class="material-icons media-left pmd-sm"
+                                                                       style="padding-right:10px;">folder_open</i><span
+                                        class="media-body">{{ item.name }}</span></a>
                             {% elif item.file_type == 1 %}
-                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">insert_drive_file</i><span class="media-body">{{ item.name }}</span>
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">insert_drive_file</i>
+                                <span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 2 %}
-                                <a href="/preview_file?file_id={{ item.id }}" target="_blank"> <i class="material-icons media-left pmd-sm" style="padding-right:10px;">collections</i><span class="media-body">{{ item.name }}</span></a>
+                                <a href="/preview_file?file_id={{ item.id }}" target="_blank"> <i
+                                        class="material-icons media-left pmd-sm"
+                                        style="padding-right:10px;">collections</i><span
+                                        class="media-body">{{ item.name }}</span></a>
                             {% elif item.file_type == 3 %}
-                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">movie</i><span class="media-body">{{ item.name }}</span>
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">movie</i>
+                                <span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 4 %}
-                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">library_books</i><span class="media-body">{{ item.name }}</span>
+                                <i class="material-icons media-left pmd-sm"
+                                   style="padding-right:10px;">library_books</i>
+                                <span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 5 %}
-                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">music</i><span class="media-body">{{ item.name }}</span>
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">music</i>
+                                <span class="media-body">{{ item.name }}</span>
                             {% endif %}
                         </td>
                         <td><span class="status-btn blue-bg">{{ item.file_type }}</span></td>
@@ -152,6 +164,7 @@
 
 <script src="//cdn.bootcss.com/jquery.form/3.51/jquery.form.js"></script>
 <script src="{% static 'layui/layui.js' %}" charset="utf-8"></script>
+<script type="text/javascript" src="{% static 'js/spark-md5.js' %}"></script>
 <script>
     layui.use(['layer'], function () {
     });
@@ -181,6 +194,90 @@
         });
     }
 
+</script>
+<script>
+    var parentId = {{ parent_id }};	//当前目录Id
+    var uploadFileName;		//要上传的文件的名称
+    var uploadFileSize;	//要上传的文件的大小
+    var uploadFileMD5;	//要上传文件的MD5
+    var running = false;	//	是否在运行获取文件md5
+    var options;
+    $(document).ready(function () {
+        options = {
+            success: function (data) {
+                layer.msg('上传成功');
+            }
+        };
+        // ajaxForm
+        $("#file_upload").ajaxForm(options);
+        // ajaxSubmit
+        $("#upload_button").click(function () {
+            checkUpload();
+        });
+
+    });
+
+
+    function checkUpload() {
+        getFileMD5();
+    }
+
+    function upload() {
+        layer.msg('开始上传文件');
+        $("#upload_file").ajaxSubmit(options);
+    }
+
+    function getFileMD5() {
+        var input = document.getElementById('file');	//	文件选择框
+        if (running) {
+            return;
+        }
+        if (!input.files.length) {
+            alert('请选择文件');
+            return;
+        }
+        var fileReader = new FileReader(),
+            uploadFile = input.files[0];
+
+        fileReader.onload = function (e) {
+            running = false;
+            if (uploadFile.size !== e.target.result.byteLength) {
+                alert('ERROR:Browser reported success but could not read the file until the end.');
+            } else {
+//          	 alert('success'+ SparkMD5.ArrayBuffer.hash(e.target.result));
+                uploadFileMD5 = SparkMD5.ArrayBuffer.hash(e.target.result);
+                $("#text_md5").text("文件MD5：" + uploadFileMD5);
+
+                uploadFileName = uploadFile.name;
+                uploadFileSize = uploadFile.size;
+                checkFileMD5();
+            }
+        };
+        fileReader.onerror = function () {
+            running = false;
+            alert('error:FileReader onerror was triggered, maybe the browser aborted due to high memory usage.');
+        };
+        running = true;
+        fileReader.readAsArrayBuffer(uploadFile);
+    }
+
+    //检查MD5是否存在记录，如果存在就需不要上传文件了
+    function checkFileMD5() {
+        $.post("/check_file_md5", {
+            "parent_id": parentId,
+            "size": uploadFileSize,
+            "md5": uploadFileMD5,
+            "name": uploadFileName
+        }, function (data) {
+            if (data.code === 0) {
+                alert("文件秒传完成");
+            } else {
+                //开始上传文件
+                alert("存在状况：" + data.code);
+                upload();
+            }
+        });
+    }
 </script>
 </body>
 </html>

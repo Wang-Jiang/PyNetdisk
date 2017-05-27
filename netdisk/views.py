@@ -3,16 +3,14 @@ import random
 from datetime import datetime
 from itertools import chain
 
-from django.http import HttpResponse, HttpResponseRedirect, StreamingHttpResponse
+from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
 from django.utils.http import urlquote
 
 from netdisk.forms import RegisterForm
 from netdisk.message import Message
 from netdisk.models import User, File
-
-# 暂时未考虑显示类型
-from netdisk.utils import get_file_type, get_file_icon, get_show_type_num
+from netdisk.utils import get_file_type, get_show_type_num
 
 
 def index(request):
@@ -28,6 +26,7 @@ def index(request):
         except Exception as error:
             # TODO 404情况
             print(error)
+            return HttpResponse('父文件夹不存在')
 
     # 查询并排序
     if show_type is 'all' or show_type is '':
@@ -35,8 +34,21 @@ def index(request):
     else:
         file_list = File.objects.filter(user_id=user.id, file_type=get_show_type_num(show_type)).order_by('id')
 
+    # 处理文件目录
+    file_path_list = []
+    temp_file = {}
+    temp_parent_id = parent_id
+    while temp_parent_id != 0 and temp_file is not None:
+        temp_file = File.objects.filter(id=temp_parent_id)[0]
+        file_path_list.append(temp_file)
+        temp_parent_id = temp_file.parent_id
+        print(temp_file)
+    # 数组倒序排序
+    file_path_list.reverse()
+
     return render(request, 'netdisk/index.html',
-                  {'show_type': show_type, 'parent_id': parent_id, 'file_list': file_list})
+                  {'show_type': show_type, 'parent_id': parent_id, 'file_list': file_list,
+                   'file_path_list': file_path_list})
 
 
 def create_folder(request):
@@ -183,8 +195,8 @@ def login(request):
         user = None
         try:
             user = User.objects.get(email=email, password=password)
-        except Exception:
-            print('邮件或者密码错误')
+        except Exception as error:
+            print('邮件或者密码错误', error)
 
         if user is None:
             return HttpResponse('邮件或者密码错误')
@@ -197,8 +209,8 @@ def login(request):
 def logout(request):
     try:
         del request.session['user']  # 不存在时报错
-    except Exception:
-        print('没有登陆')
+    except Exception as error:
+        print('没有登陆', error)
     return HttpResponseRedirect('/')
 
 
@@ -214,8 +226,8 @@ def register(request):
             try:
                 User.objects.get(email=email)
                 return HttpResponse('邮箱已经被注册')
-            except Exception:
-                print('没有注册')
+            except Exception as error:
+                print('没有注册', error)
 
             User.objects.create(username=username, email=email, password=password)
             return HttpResponse(email + '注册成功')
@@ -230,15 +242,32 @@ def user_info(request):
         # 查看信息
         return render(request, 'netdisk/user-info.html', {'user': request.session['user']})
     elif request.method == 'POST':
-        # 保存信息
         user = request.session['user']
+        # 处理上传的头像
+        upload_photo = request.FILES['photo']
+        if upload_photo is not None:
+            # 获取后缀名，没有考虑，上传的文件没有后缀的情况
+            ext_name = os.path.splitext(upload_photo.name)[-1]
+
+            # 生成时间戳+随机数字，用于重命名文件，防止文件重名
+            target_file_name = datetime.now().strftime('%Y%b%d%H%M%S') + str(random.randint(1000, 9999)) + ext_name
+            target_file = open('D:/workspace/PyNetdisk/netdisk/static/avatar/' + target_file_name, 'wb+')
+            for chunk in upload_photo.chunks():
+                target_file.write(chunk)
+                # 关闭文件
+            target_file.close()
+
+            user.avatar = "/static/avatar/" + target_file_name
+
+        # 保存信息
         user.username = request.POST['username']
         user.save()
 
         # print(request.session['user'].username)
         # TODO 出了点问题，session的user信息没有变化，这里采用覆盖来处理
         request.session['user'] = user
-        return HttpResponse(Message(100, 'success').to_json(), content_type='application/json')
+        # return HttpResponse(Message(100, 'success').to_json(), content_type='application/json')
+        return HttpResponseRedirect('/user_info')
 
 
 def change_password(request):
@@ -260,3 +289,12 @@ def change_password(request):
     user.save()
     del request.session['user']
     return HttpResponseRedirect('/login')
+
+
+def check_file_md5(request):
+    user = request.session['user']
+    file_name = request.POST['name']
+    md5 = request.POST['md5']
+
+
+    pass

@@ -3,15 +3,8 @@
 <!doctype html>
 <html lang="">
 <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta content="width=device-width, initial-scale=1, user-scalable=no" name="viewport">
-    <title>Login | Propeller - Admin Dashboard</title>
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-    <link rel="stylesheet" type="text/css" href="{% static "assets/css/bootstrap.min.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "assets/css/propeller.min.css" %}">
-    <link rel="stylesheet" type="text/css" href="{% static "themes/css/propeller-theme.css" %}"/>
-    <link rel="stylesheet" type="text/css" href="{% static "themes/css/propeller-admin.css" %}">
+    <title>登陆 | PyNetdisk</title>
+    {% include 'netdisk/common/head.html' %}
 </head>
 
 <body class="body-custom">
@@ -22,19 +15,21 @@
                 {% csrf_token %}
                 <div class="pmd-card-title card-header-border text-center">
                     <div class="loginlogo">
-                        <a href="javascript:void(0);"><img src="{% static "themes/images/logo-icon.png" %}" alt="Logo"></a>
+                        <a href="javascript:void(0);"><img src="{% static "img/logo.png" %}" alt="Logo"></a>
                     </div>
                     <h3>Sign In <span>with <strong>PROPELLER</strong></span></h3>
                 </div>
 
                 <div class="pmd-card-body">
-                    <div class="alert alert-success" role="alert"> Oh snap! Change a few things up and try submitting again.</div>
+                    <div class="alert alert-success" role="alert"> Oh snap! Change a few things up and try submitting
+                        again.
+                    </div>
                     <div class="form-group pmd-textfield pmd-textfield-floating-label">
                         <label class="control-label pmd-input-group-label">邮箱</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">perm_identity</i>
                             </div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="email">
+                            <input type="text" class="form-control" name="email">
                         </div>
                     </div>
 
@@ -43,17 +38,13 @@
                         <div class="input-group">
                             <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">lock_outline</i>
                             </div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="password">
+                            <input type="password" class="form-control" name="password">
                         </div>
                     </div>
                 </div>
                 <div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
                     <div class="form-group clearfix">
                         <div class="checkbox pull-left">
-                            <label class="pmd-checkbox checkbox-pmd-ripple-effect">
-                                <input type="checkbox" checked="" value="">
-                                <span class="pmd-checkbox"> Remember me</span>
-                            </label>
                         </div>
                         <span class="pull-right forgot-password">
 							<a href="javascript:void(0);">忘记密码?</a>
@@ -61,7 +52,7 @@
                     </div>
                     <button type="submit" class="btn pmd-ripple-effect btn-primary btn-block">登陆</button>
                     <p class="redirection-link">没有账号? <a href="javascript:void(0);"
-                                                                          class="login-register">注册</a>. </p>
+                                                         class="login-register">注册</a>. </p>
                 </div>
             </form>
         </div>
@@ -69,7 +60,7 @@
         <div class="register-card">
             <div class="pmd-card-title card-header-border text-center">
                 <div class="loginlogo">
-                    <a href="javascript:void(0);"><img src="{%  static "themes/images/logo-icon.png" %}" alt="Logo"></a>
+                    <a href="javascript:void(0);"><img src="{% static "img/logo.png" %}" alt="Logo"></a>
                 </div>
                 <h3>Sign Up <span>with <strong>PROPELLER</strong></span></h3>
             </div>
@@ -81,7 +72,7 @@
                         <div class="input-group">
                             <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">perm_identity</i>
                             </div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="username">
+                            <input type="text" class="form-control" name="username">
                         </div>
                     </div>
 
@@ -89,7 +80,7 @@
                         <label class="control-label pmd-input-group-label">邮箱</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">email</i></div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="email">
+                            <input type="text" class="form-control" name="email">
                         </div>
                     </div>
 
@@ -98,13 +89,13 @@
                         <div class="input-group">
                             <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">lock_outline</i>
                             </div>
-                            <input type="text" class="form-control" id="exampleInputAmount" name="password">
+                            <input type="password" class="form-control" name="password">
                         </div>
                     </div>
                 </div>
 
                 <div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
-                    <button  type="submit" class="btn pmd-ripple-effect btn-primary btn-block">注册</button>
+                    <button type="submit" class="btn pmd-ripple-effect btn-primary btn-block">注册</button>
                     <p class="redirection-link">已有账号? <a href="javascript:void(0);" class="register-login">登陆</a>. </p>
                 </div>
             </form>
@@ -114,7 +105,7 @@
             <form>
                 <div class="pmd-card-title card-header-border text-center">
                     <div class="loginlogo">
-                        <a href="javascript:void(0);"><img src="{%  static "themes/images/logo-icon.png" %}" alt="Logo"></a>
+                        <a href="javascript:void(0);"><img src="{% static "img/logo.png" %}" alt="Logo"></a>
                     </div>
                     <h3>忘记密码?<br><span>填写你的邮箱，我们将重置密码.</span></h3>
                 </div>
@@ -123,7 +114,7 @@
                         <label for="inputError1" class="control-label pmd-input-group-label">邮箱</label>
                         <div class="input-group">
                             <div class="input-group-addon"><i class="material-icons md-dark pmd-sm">email</i></div>
-                            <input type="text" class="form-control" id="exampleInputAmount">
+                            <input type="text" class="form-control">
                         </div>
                     </div>
                 </div>
