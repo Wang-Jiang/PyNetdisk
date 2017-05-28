@@ -1,0 +1,46 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>图片预览</title>
+    <link rel="stylesheet" href="{% static 'css/jquery.iviewer.css' %}"/>
+    <style>
+        .viewer {
+            height: 100%;
+            position: relative;
+        }
+
+        .wrapper {
+            position: absolute;
+            top: 1.5em;
+            left: 0;
+            bottom: 1.5em;
+            right: 0;
+        }
+    </style>
+</head>
+<body>
+<div class="wrapper">
+    <div id="viewer" class="viewer iviewer_cursor"></div>
+    <br/>
+</div>
+<script type="text/javascript" src="{% static 'js/jquery.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jqueryui.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.mousewheel.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery.iviewer.js' %}"></script>
+<script type="text/javascript">
+    var $ = jQuery;
+    $(document).ready(function () {
+        var iviewer = {};
+        $("#viewer").iviewer(
+            {
+                src: "/preview_file?file_id={{ img_id }}",
+                initCallback: function () {
+                    iviewer = this;
+                }
+            });
+    });
+</script>
+</body>
+</html>

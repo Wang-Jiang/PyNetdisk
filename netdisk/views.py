@@ -132,8 +132,9 @@ def upload_file(request):
         file = File.objects.filter(parent_id=parent_id, user_id=user.id, name=f.name)
         if file is None or file.count() == 0:
             File.objects.create(parent_id=parent_id, user_id=user.id, file_type=get_file_type(ext_name), name=f.name,
-                                file_path=target_file.name, file_md5=file_md5, create_time=datetime.now(), file_size=get_file_size(target_file.name))
-        # 不允许同名文件
+                                file_path=target_file.name, file_md5=file_md5, create_time=datetime.now(),
+                                file_size=get_file_size(target_file.name))
+            # 不允许同名文件
     return HttpResponse(Message(100, u'上传成功').to_json(), content_type='application/json')
 
 
@@ -313,10 +314,17 @@ def check_file_md5(request):
         if file_temp is None or file_temp.count() == 0:
             # 新建一条文件记录
             File.objects.create(parent_id=parent_id, user_id=user.id, file_type=file.file_type, name=file_name,
-                                file_md5=file_md5, file_path=file.file_path, create_time=datetime.now(), file_size=file.file_size)
+                                file_md5=file_md5, file_path=file.file_path, create_time=datetime.now(),
+                                file_size=file.file_size)
         else:
             return HttpResponse(Message(100, u'存在重名文件').to_json(), content_type='application/json')
 
         return HttpResponse(Message(100, u'文件秒传完成').to_json(), content_type='application/json')
 
     return HttpResponse(Message(200, u'服务器不存在该文件').to_json(), content_type='application/json')
+
+
+# 图片预览功能
+def img_preview(request):
+    img_id = request.GET['file_id']
+    return render(request, 'netdisk/img-preview.html', {'img_id': img_id})

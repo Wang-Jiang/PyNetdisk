@@ -36,6 +36,7 @@ urlpatterns = [
     url(r'^user_info', netdisk_views.user_info, name='netdisk_user_info'),
     url(r'^change_password', netdisk_views.change_password, name='netdisk_change_password'),
     url(r'^check_file_md5', netdisk_views.check_file_md5, name='netdisk_check_file_md5'),
+    url(r'^img_preview', netdisk_views.img_preview, name='netdisk_img_preview'),
     url(r'^admin/', admin.site.urls),
     url(r'^static/(?P<path>.*)$', views.serve),
 ]

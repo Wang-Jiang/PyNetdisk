@@ -112,23 +112,23 @@
                     <tr>
                         <td>
                             {% if item.file_type == 0 %}
-                                <a href="/?parent_id={{ item.id }}"><i class="material-icons media-left pmd-sm"
-                                                                       style="padding-right:10px;">folder_open</i><span
-                                        class="media-body">{{ item.name }}</span></a>
+                                <a href="/?parent_id={{ item.id }}">
+                                    <i class="material-icons media-left pmd-sm" style="padding-right:10px;">folder_open</i>
+                                    <span class="media-body">{{ item.name }}</span>
+                                </a>
                             {% elif item.file_type == 1 %}
                                 <i class="material-icons media-left pmd-sm" style="padding-right:10px;">insert_drive_file</i>
                                 <span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 2 %}
-                                <a href="/preview_file?file_id={{ item.id }}" target="_blank"> <i
-                                        class="material-icons media-left pmd-sm"
-                                        style="padding-right:10px;">collections</i><span
-                                        class="media-body">{{ item.name }}</span></a>
+                                <a href="/img_preview?file_id={{ item.id }}" target="_blank">
+                                    <i class="material-icons media-left pmd-sm" style="padding-right:10px;">collections</i>
+                                    <span class="media-body">{{ item.name }}</span>
+                                </a>
                             {% elif item.file_type == 3 %}
                                 <i class="material-icons media-left pmd-sm" style="padding-right:10px;">movie</i>
                                 <span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 4 %}
-                                <i class="material-icons media-left pmd-sm"
-                                   style="padding-right:10px;">library_books</i>
+                                <i class="material-icons media-left pmd-sm" style="padding-right:10px;">library_books</i>
                                 <span class="media-body">{{ item.name }}</span>
                             {% elif item.file_type == 5 %}
                                 <i class="material-icons media-left pmd-sm" style="padding-right:10px;">music</i>
