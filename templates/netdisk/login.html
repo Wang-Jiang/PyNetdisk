@@ -17,7 +17,7 @@
                     <div class="loginlogo">
                         <a href="javascript:void(0);"><img src="{% static "img/logo.png" %}" alt="Logo"></a>
                     </div>
-                    <h3>Sign In <span>with <strong>PROPELLER</strong></span></h3>
+                    <h3>登陆</h3>
                 </div>
 
                 <div class="pmd-card-body">
@@ -43,13 +43,13 @@
                     </div>
                 </div>
                 <div class="pmd-card-footer card-footer-no-border card-footer-p16 text-center">
-                    <div class="form-group clearfix">
-                        <div class="checkbox pull-left">
-                        </div>
-                        <span class="pull-right forgot-password">
-							<a href="javascript:void(0);">忘记密码?</a>
-						</span>
-                    </div>
+{#                    <div class="form-group clearfix">#}
+{#                        <div class="checkbox pull-left">#}
+{#                        </div>#}
+{#                        <span class="pull-right forgot-password">#}
+{#							<a href="javascript:void(0);">忘记密码?</a>#}
+{#						</span>#}
+{#                    </div>#}
                     <button type="submit" class="btn pmd-ripple-effect btn-primary btn-block">登陆</button>
                     <p class="redirection-link">没有账号? <a href="javascript:void(0);"
                                                          class="login-register">注册</a>. </p>
@@ -62,7 +62,7 @@
                 <div class="loginlogo">
                     <a href="javascript:void(0);"><img src="{% static "img/logo.png" %}" alt="Logo"></a>
                 </div>
-                <h3>Sign Up <span>with <strong>PROPELLER</strong></span></h3>
+                <h3>注册</h3>
             </div>
             <form action="/register" method="post">
                 {% csrf_token %}
